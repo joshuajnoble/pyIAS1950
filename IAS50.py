@@ -29,7 +29,6 @@ class IAS:
         self.AC = self.MQ
 
     def loadToMQ(self, register): #LOAD self.MQ,M(X) Transfer contents of memory location X to self.MQ
-        print "load to MQ " + str(self.selectron[register].int)
         self.MQ = BitStream(int=self.selectron[register].int, length=40)
 
     def store(self, register): #STOR M(X) Transfer contents of accumulator to memory location X
@@ -65,27 +64,25 @@ class IAS:
         if(self.AC[39] == 1):
             ops[self.selectron[register][20:27]](self.selectron[register][28:40].int)
 
-    def add(self, register): #ADD M(X) Add M(X) to self.AC; put the result in self.AC
+    def add(self, register): #ADD M(X) Add M(X) to AC; put the result in self.AC
         self.AC = BitStream(int=self.AC.int + self.selectron[register].int, length=40)
 
-    def addAbs(self, register): #ADD |M(X)| Add |M(X)| to self.AC; put the result in self.AC
-        self.AC = BitStream(int=self.AC.int + self.selectron[register].uint, length=40)
+    def addAbs(self, register): #ADD |M(X)| Add |M(X)| to AC; put the result in self.AC
+        self.AC = BitStream(int=self.AC.int + abs(self.selectron[register].int), length=40)
 
-    def sub(self, register): #SUB M(X) Subtract M(X) from self.AC; put the result in self.AC
+    def sub(self, register): #SUB M(X) Subtract M(X) from AC; put the result in self.AC
         self.AC = BitStream(int=self.AC.int - self.selectron[register].int, length=40)
 
-    def subRem(self, register): #SUB |M(X)| Subtract |M(X)} from self.AC; put the remainder in self.AC
-        self.AC = BitStream(int=self.AC.int + self.selectron[register].uint, length=40)
+    def subRem(self, register): #SUB |M(X)| Subtract |M(X)} from AC; put the remainder in self.AC
+        self.AC = BitStream(int=self.AC.int + abs(self.selectron[register].int), length=40)
 
-    def mul(self, register): #MUL M(X) Multiply M(X) by M(Q); put most significant bits of result in self.AC, put less significant bits in M(Q)
-        print "multiply " + str(self.MQ.int)
+    def mul(self, register): #MUL M(X) Multiply M(X) by M(Q); put most significant bits of result in AC, put less significant bits in M(Q)
         res = BitStream(int=self.MQ.int * self.selectron[register].int, length=80)
-        print "res " + res.read(80).hex
         self.AC = BitStream(int=res[40:80].int, length=40)
         self.MQ = BitStream(int=res[0:39].int, length=40)
 
-    def div(self, register): #DIV M(X) Divide self.AC by M(X); put the quotient in self.MQ and the remainder in self.AC
-        quo = BitStream(int=self.AC.int / self.selectron[register].int, length=40)
+    def div(self, register): #DIV M(X) Divide AC by M(X); put the quotient in MQ and the remainder in AC
+        quo = BitStream(int=(self.AC.int / self.selectron[register].int), length=40)
         rem = BitStream(int=self.AC.int % self.selectron[register].int, length=40)
         self.AC = quo
         self.MQ = rem
@@ -96,10 +93,10 @@ class IAS:
     def rs(self, register): #RSh Divide accumulator by 2 (i.e., shift right one bit position)
         self.AC >>= 1
 
-    def storL(self, register): #STOR M(X,8:19) Replace left address field at M(X) by 12 right-most bits of self.AC
+    def storL(self, register): #STOR M(X,8:19) Replace left address field at M(X) by 12 right-most bits of AC
         self.selectron[register][20:39] = self.AC[0:19]
 
-    def storR(self, register): #STOR M(X,28:39) Replace right address field at M(X) by 12 right-most bits of self.AC
+    def storR(self, register): #STOR M(X,28:39) Replace right address field at M(X) by 12 right-most bits of AC
         self.selectron[register][0:19] = self.AC[0:19]
 
     def __init__(self):
