@@ -46,9 +46,9 @@ class IAS:
         selectron[register] = BitArray(int=value, length=40)
 
     def instruction(opcode, address):
-
-        bopcode = BitArray(opcode)
-        baddress = BitArray(address)
+    	# you don't put the 0b, I do, you just punch the cards right
+        bopcode = BitArray('0b'+opcode)
+        baddress = BitArray('0b'+address)
 
         ops[opcode](address)
 
