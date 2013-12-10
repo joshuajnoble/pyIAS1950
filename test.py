@@ -40,16 +40,16 @@ for instruction in addRoutine:
 	ias.instruction(instruction[0], instruction[1])
 
 #what'd we add?
-print "added " + str(ias.read('000000000100').read(40))
+print ias.read('000000000100')
 
 for instruction in mulRoutine:
 	ias.instruction(instruction[0], instruction[1])
 
 #what'd we multiply?
-print "multiplied " + str(ias.read('000000000101').read(40))
+print ias.read('000000000101')
 
 for instruction in divRoutine:
 	ias.instruction(instruction[0], instruction[1])
 
-print "divided " + str(ias.read('000000000101').read(40)) # read the quo
-print "remaineder of " + str(ias.read('000000000111').read(40)) # read the remainder
+print ias.read('000000000101') # read the quo
+print ias.read('000000000111') # read the remainder
