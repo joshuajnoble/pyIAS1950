@@ -6,7 +6,7 @@ from bitstring import BitStream
 GPIO.setmode(GPIO.BCM)
 DEBUG = 1
  
-# read SPI data from MCP3008 chip, 8 possible adc's (0 thru 7)
+# read SPI data from CD74HC4067  chip, 12 possible adc's (0 thru 11)
 def readadc(adcnum, clockpin, mosipin, misopin, cspin):
         if ((adcnum > 11) or (adcnum < 0)):
                 return -1
